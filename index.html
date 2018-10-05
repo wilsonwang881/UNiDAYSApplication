@@ -10,7 +10,7 @@
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="js/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="js/bootstrap.min.js"></script>
 
@@ -39,53 +39,107 @@
 
     function checkType(obj){
       console.log(typeof obj);
+      let rules = new UnidaysDiscountChallenge(defaultPricingRule);
       return typeof obj;
     }
 
     class UnidaysDiscountChallenge  {
       constructor(pricingRules) {
         this.total = 0;
-        this.DeliveryCharge = 0;
+        this.deliveryCharge = 0;
         this.pricingRules = pricingRules;
-        this.basket = initializeBasket();
+        this.basket = {};
+
+        for(var key in this.pricingRules) {
+          this.basket[key] = 0;
+        }
+
+        console.log(this.basket);
       }
 
-      get total(){
+      total() {
         return this.total;
       }
 
-      get deliveryCharge(){
+      deliveryCharge() {
         return this.deliveryCharge;
       }
 
-      initializeBasket(){
-        var emptyBasket = {};
-        for(var key in this.pricingRules) {
-          emptyBasket[key] = 0;
+      basket() {
+        return this.basket;
+      }
+
+      addToBasket(item) {
+        try {
+          this.basket[item] += 1;
+        }
+        catch(err) {
+          alert("Item does not exist");
+        }
+        console.log(this.basket);
+      }
+
+      removeFromBasket(item) {
+        try {
+          if(this.basket[item]>0){
+            this.basket[item] -= 1;
+          }
+          else{
+            this.basket[item] = 0;
+          }
+        }
+        catch(err) {
+          alert("Item does not exist");
         }
       }
 
-      AddToBasket(item){
-        this.basket.push(item);
+      calculateTotalPrice() {
+        this.total = 0;
+
+        for(var key in this.basket) {
+          if(this.basket[key]>0){
+            this.total += interpretPricingPolicy(key, this.basket[key]);
+          }
+        }
       }
 
-      removeFromBasket(item){
+      interpretPricingPolicy(item, amount) {
+        var price = this.pricingRules[key]["price"];
 
+        if(this.pricingRules[key]["discount"]=="none"){
+          return price*amount;
+        }
+        else{
+          var policy = this.pricingRules[key]["discount"].split(" ");
+
+          switch (policy[1]) {
+            case "cost":
+
+              break;
+            case "free":
+
+              break;
+            case "for":
+
+              break;
+            default:
+              break;
+          }
+        }
       }
-
-      CalculateTotalPrice(){
-
-      }
-    }
-    function calculatorClicked() {
-      $("#pricing-rules-div").attr("style", "display: none");
-      $("#calculator-div").attr("style", "display: block");
     }
 
-    function pricingRulesClicked() {
-      $("#pricing-rules-div").attr("style", "display: block");
-      $("#calculator-div").attr("style", "display: none");
-    }
+    $(document).ready(function () {
+      $("#showCalculator").click(function () {
+        $("#pricing-rules-div").attr("style", "display: none");
+        $("#calculator-div").attr("style", "display: block");
+      });
+
+      $("#showPricingRules").click(function (){
+        $("#pricing-rules-div").attr("style", "display: block");
+        $("#calculator-div").attr("style", "display: none");
+      });
+    });
 
     </script>
   </head>
@@ -98,15 +152,9 @@
       <div class="col-xs-12" style="height:20px;"></div>
       <div class="row">
         <div class="col-2">
-          <ul class="nav flex-column">
-            <li class="nav-item">
-              <button type="button" class="btn btn-default" onclick="calculatorClicked()">Calculator</button>
-            </li>
-            <div class="col-xs-12" style="height:10px;"></div>
-            <li class="nav-item">
-              <button type="button" class="btn btn-default" onclick="pricingRulesClicked()">Pricing Rules</button>
-            </li>
-        </ul>
+          <button id="showCalculator" type="button" class="btn btn-default">Calculator</button>
+          <div class="col-xs-12" style="height:15px;"></div>
+          <button id="showPricingRules" type="button" class="btn btn-default">Pricing Rules</button>
         </div>
         <div class="col-1">
         </div>
