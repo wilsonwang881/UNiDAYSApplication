@@ -10,7 +10,7 @@ The web interface includes two parts: one for selecting goods and adding them to
 
 ## Implementation:
 
-The application is implemented mainly using JavaScript and can be considered to be server-less. I am currently trying to integrate with Vue.js for better performance.
+The application is implemented mainly using JavaScript and can be considered to be server-less. I am currently trying to integrate with Vue.js for better performance. Also, more comments and codes are on the way!
 
 
 ## Deployment:
