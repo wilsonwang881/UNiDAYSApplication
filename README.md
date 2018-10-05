@@ -1,4 +1,4 @@
-# UNIDAYS Discount Calculator Application
+# UNiDAYS Discount Calculator Application
 
 ## Link to the program specification: 
 
