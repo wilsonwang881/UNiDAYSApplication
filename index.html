@@ -46,6 +46,8 @@
       constructor(pricingRules) {
         this.total = 0;
         this.DeliveryCharge = 0;
+        this.pricingRules = pricingRules;
+        this.basket = initializeBasket();
       }
 
       get total(){
@@ -56,7 +58,18 @@
         return this.deliveryCharge;
       }
 
+      initializeBasket(){
+        var emptyBasket = []
+        for(var i=0; i<this.pricingRules.length; i++){
+          emptyBasket.push(this.pricingRules[i])
+        }
+      }
+
       AddToBasket(item){
+        this.basket.push(item);
+      }
+
+      removeFromBasket(item){
 
       }
 
