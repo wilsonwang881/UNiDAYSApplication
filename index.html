@@ -11,7 +11,7 @@
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="js/jquery-3.3.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script> -->
     <script src="js/bootstrap.min.js"></script>
 
     <title>Price Calculator</title>
@@ -34,58 +34,67 @@
     };
 
     function callCheckObj(){
-      checkType(defaultPricingRule);
-    }
-
-    function checkType(obj){
-      console.log(typeof obj);
+      var cart = $("#cart").val();
       let rules = new UnidaysDiscountChallenge(defaultPricingRule);
-      return typeof obj;
+
+      for(var i=0; i<cart.length; i++){
+        rules.addToBasket(cart[i]);
+      }
+
+      rules.calculateTotalPrice();
+
+      var basket = rules.basket();
+
+      for(var key in basket){
+        if(basket[key]!=0){
+          $("#" + key).attr("style", "display: block");
+        }
+      }
+
+      $("#deliveryDisplay").html("£" + rules.deliveryCharge());
+      $("#totalDisplay").html("£ " + rules.total());
     }
 
     class UnidaysDiscountChallenge  {
       constructor(pricingRules) {
-        this.total = 0;
-        this.deliveryCharge = 0;
-        this.pricingRules = pricingRules;
-        this.basket = {};
+        this._total = 0;
+        this._deliveryCharge = 0;
+        this._pricingRules = pricingRules;
+        this._basket = {};
 
-        for(var key in this.pricingRules) {
-          this.basket[key] = 0;
+        for(var key in this._pricingRules) {
+          this._basket[key] = 0;
         }
-
-        console.log(this.basket);
       }
 
       total() {
-        return this.total;
+        return Number(this._total).toFixed(2);
       }
 
       deliveryCharge() {
-        return this.deliveryCharge;
+        return Number(this._deliveryCharge).toFixed(2);
       }
 
       basket() {
-        return this.basket;
+        return this._basket;
       }
 
       addToBasket(item) {
         try {
-          this.basket[item] += 1;
+          this._basket[item] += 1;
         }
         catch(err) {
           alert("Item does not exist");
         }
-        console.log(this.basket);
       }
 
       removeFromBasket(item) {
         try {
-          if(this.basket[item]>0){
-            this.basket[item] -= 1;
+          if(this._basket[item]>0){
+            this._basket[item] -= 1;
           }
           else{
-            this.basket[item] = 0;
+            this._basket[item] = 0;
           }
         }
         catch(err) {
@@ -93,38 +102,61 @@
         }
       }
 
-      calculateTotalPrice() {
-        this.total = 0;
-
-        for(var key in this.basket) {
-          if(this.basket[key]>0){
-            this.total += interpretPricingPolicy(key, this.basket[key]);
-          }
-        }
-      }
-
       interpretPricingPolicy(item, amount) {
-        var price = this.pricingRules[key]["price"];
+        var price = this._pricingRules[item]["price"];
 
-        if(this.pricingRules[key]["discount"]=="none"){
+        if(this._pricingRules[item]["discount"]=="none"){
           return price*amount;
         }
         else{
-          var policy = this.pricingRules[key]["discount"].split(" ");
+          var policy = this._pricingRules[item]["discount"].split(" ");
+          var individualCost = this._pricingRules[item]["price"];
+          var cost = 0;
 
           switch (policy[1]) {
             case "cost":
-
+              var bundle = policy[0];
+              var bundleCost = policy[2];
+              var remainCount = amount % bundle;
+              var bundleCount = (amount - remainCount) / bundle;
+              cost = bundleCost * bundleCount + remainCount * individualCost;
               break;
             case "free":
-
+              var bundlePay = policy[0];
+              var bundleFree = policy[2];
+              var remainCount = Number(amount) % (Number(bundlePay) + Number(bundleFree));
+              var bundleCount = (amount - remainCount) / (Number(bundlePay) + Number(bundleFree));
+              cost = bundleCount * bundlePay * individualCost + remainCount * individualCost;
               break;
             case "for":
-
+              var bundleActual = policy[0];
+              var bundlePay = policy[2];
+              var bundleRemain = amount % bundleActual;
+              var bundleCount = (amount - bundleRemain) / bundleActual;
+              cost = bundleCount * bundlePay * individualCost + bundleRemain * individualCost;
               break;
             default:
               break;
           }
+
+          return cost;
+        }
+      }
+
+      calculateTotalPrice() {
+        this._total = 0;
+
+        for(var key in this._basket) {
+          if(this._basket[key]>0){
+            this._total += this.interpretPricingPolicy(key, this._basket[key]);
+          }
+        }
+
+        if(this._total >= 50){
+          this._deliveryCharge = 0;
+        }
+        else{
+          this._deliveryCharge = 7;
         }
       }
     }
@@ -164,7 +196,7 @@
               <div class="col-7">
                 <h3>Items</h3>
                 <div class="row">
-                  <input type="text" class="form-control" style="width: 70%;">
+                  <input id="cart" type="text" class="form-control" style="width: 70%;">
                   <button class="btn btn-default" onclick="callCheckObj()">Get price</button>
                 </div>
               </div>
@@ -172,17 +204,17 @@
                 <h4>Summary</h4>
                 <hr size="5" id="belowSummary" style="display: none;">
                 <div id="itemNone" style="display: block"></div>
-                <div id="itemA" style="display: none;"></div>
-                <div id="itemB" style="display: none;"></div>
-                <div id="itemC" style="display: none;"></div>
-                <div id="itemD" style="display: none;"></div>
-                <div id="itemE" style="display: none;"></div>
-                <div id="itemF" style="display: none;"></div>
+                <div id="A" style="display: none;"></div>
+                <div id="B" style="display: none;"></div>
+                <div id="C" style="display: none;"></div>
+                <div id="D" style="display: none;"></div>
+                <div id="E" style="display: none;"></div>
+                <div id="F" style="display: none;"></div>
                 <hr size="5">
                 <h5>Delivery</h5>
-                <h6>£0.00</h6>
+                <h6 id="deliveryDisplay">£0.00</h6>
                 <h5>Total</h5>
-                <h6>£0.00</h6>
+                <h6 id="totalDisplay">£0.00</h6>
               </div>
             </div>
           </div>
