@@ -14,6 +14,12 @@ The application is implemented mainly using JavaScript and can be considered to 
 
 The jQuery, Bootstrap JavaScript and CSS are held in the repository instead of using links.
 
+## Usage:
+
+The user can change the number of each item either from the input field at the bottom, or from the small input fields below each item's price tag.
+
+Once the user finishes entering items, click on the button on the right of the input field to generate the delivery cost, the total price and a summary.
+
 
 ## Deployment:
 
