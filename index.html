@@ -279,6 +279,10 @@
       $('#myDropdown').on('show.bs.dropdown', function () {
         console.log("dropdown changed");
       });
+
+      $('#makeChanges').click(function(){
+        console.log("update button clicked");
+      });
     });
 
     </script>
@@ -383,7 +387,7 @@
                 <h4>A</h4>
               </div>
               <div class="col-4">
-                <h4>£8.00</h4>
+                <h4>£<input type="number" value="8.00" min="0.00" style="width: 60%; text-align: center; font-size: 20px"></h4>
               </div>
               <div class="col-6">
                 <div class="btn-group" id="myDropdown">
@@ -491,7 +495,15 @@
                 </div>
               </div>
             </div>
-            <div class="col-xs-12" style="height:1em;"></div>
+            <div class="col-xs-12" style="height:3em;"></div>
+
+            <div class="row">
+              <div class="col-6">
+              </div>
+              <div class="col-6">
+                <button id="makeChanges" type="button" class="btn btn-primary">Apply Changes</button>
+              </div>
+            </div>
 
           </div>
         </div>
