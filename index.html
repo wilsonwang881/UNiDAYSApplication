@@ -144,7 +144,6 @@
     }
 
     $(document).ready(function () {
-      var itemArray = ['A', 'B', 'C', 'D', 'E'];
       var app1 = new Vue({
         el: '#app-1',
         data: {
@@ -196,10 +195,9 @@
         $("#totalDisplay").html("£ " + rules.total());
       });
 
-      var itemOption = ".ACount";
-      var item = 'A';
-      $(itemOption).bind('input', function (){
-        console.log(itemOption, "changed");
+      function changeFromDigit(event) {
+        var item = event.data.item;
+        var itemOption = "." + item + "Count";
         var summary = $("#cart").val();
         var amount = $(itemOption).val();
         var appearance = 0;
@@ -237,7 +235,13 @@
         }
 
         $("#cart").val(summary);
-      });
+      }
+
+      $(".ACount").bind('input', {item: "A"}, changeFromDigit);
+      $(".BCount").bind('input', {item: "B"}, changeFromDigit);
+      $(".CCount").bind('input', {item: "C"}, changeFromDigit);
+      $(".DCount").bind('input', {item: "D"}, changeFromDigit);
+      $(".ECount").bind('input', {item: "E"}, changeFromDigit);
 
       $('#myDropdown').on('show.bs.dropdown', function () {
         console.log("dropdown changed");
