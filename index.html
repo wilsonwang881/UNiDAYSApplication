@@ -243,6 +243,39 @@
       $(".DCount").bind('input', {item: "D"}, changeFromDigit);
       $(".ECount").bind('input', {item: "E"}, changeFromDigit);
 
+      $("#cart").bind('input', function(){
+        var input = $("#cart").val().toUpperCase();
+        var statics = {A:0, B:0, C:0, D:0, E:0};
+
+        for(var i=0; i<input.length; i++){
+          switch (input[i]) {
+            case 'A':
+              statics['A'] += Number(1);
+              break;
+            case 'B':
+              statics['B'] += Number(1);
+              break;
+            case 'C':
+              statics['C'] += Number(1);
+              break;
+            case 'D':
+              statics['D'] += Number(1);
+              break;
+            case 'E':
+              statics['E'] += Number(1);
+              break;
+            default:
+              break;
+          }
+        }
+
+        $(".ACount").val(statics['A']);
+        $(".BCount").val(statics['B']);
+        $(".CCount").val(statics['C']);
+        $(".DCount").val(statics['D']);
+        $(".ECount").val(statics['E']);
+      });
+
       $('#myDropdown').on('show.bs.dropdown', function () {
         console.log("dropdown changed");
       });
