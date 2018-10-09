@@ -7,6 +7,7 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/transition.css">
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS, then Vue.js -->
@@ -142,6 +143,21 @@
           }
         }
       });
+
+      new Vue({
+        el: '#transition-components-demo',
+        data: {
+          view: 'v-a'
+        },
+        components: {
+          'v-a': {
+            template: "this is it"
+          },
+          'v-b': {
+            template: "calculator"
+          }
+        }
+      })
 
       var defaultPricingRule = {
         A: {price: 8,
@@ -543,7 +559,9 @@
 
             <div class="row">
               <div class="col-4">
-                <div id='logMessage-div' class="alert alert-success" style="display: none;">
+                <div id='logMessage-div' class="alert alert-success" style="display: none;
+
+                ">
                   <strong id='logMessage' style="display: none"></strong>
                 </div>
               </div>
@@ -555,6 +573,19 @@
           </div>
         </div>
       </div>
+      <div id="transition-components-demo">
+
+      <input type="radio" id="one" value="v-a" v-model="view">
+      <label for="one">One</label>
+      <br>
+      <input type="radio" id="two" value="v-b" v-model="view">
+      <label for="two">Two</label>
+
+      <transition name="component-fade" mode="out-in">
+        <component v-bind:is="view"></component>
+      </transition>
+
+    </div>
     </div>
   </body>
 </html>
