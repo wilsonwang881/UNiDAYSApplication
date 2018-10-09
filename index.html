@@ -159,11 +159,17 @@
       $("#showCalculator").click(function () {
         $("#pricing-rules-div").attr("style", "display: none");
         $("#calculator-div").attr("style", "display: block");
+        $('#logMessage-div').attr("style", "display: none");
+        $('#logMessage').html("");
+        $("#logMessage").attr("style", "display: none");
       });
 
       $("#showPricingRules").click(function (){
         $("#pricing-rules-div").attr("style", "display: block");
         $("#calculator-div").attr("style", "display: none");
+        $('#logMessage-div').attr("style", "display: none");
+        $('#logMessage').html("");
+        $("#logMessage").attr("style", "display: none");
       });
 
       $("#updateInfo").click(function (){
@@ -287,6 +293,12 @@
         defaultPricingRule['D']['price'] = $('#DPrice').val();
         defaultPricingRule['E']['price'] = $('#EPrice').val();
 
+        $('#APrice').val(Number($('#APrice').val()).toFixed(2));
+        $('#BPrice').val(Number($('#BPrice').val()).toFixed(2));
+        $('#CPrice').val(Number($('#CPrice').val()).toFixed(2));
+        $('#DPrice').val(Number($('#DPrice').val()).toFixed(2));
+        $('#EPrice').val(Number($('#EPrice').val()).toFixed(2));
+
         $('#APriceTag').html("£" + Number($('#APrice').val()).toFixed(2));
         $('#BPriceTag').html("£" + Number($('#BPrice').val()).toFixed(2));
         $('#CPriceTag').html("£" + Number($('#CPrice').val()).toFixed(2));
@@ -310,6 +322,10 @@
 
         $("#deliveryDisplay").html("£0.00");
         $("#totalDisplay").html("£0.00");
+
+        $('#logMessage').html("Updated successfully!");
+        $("#logMessage").attr("style", "display: block");
+        $('#logMessage-div').attr("style", "display: block");
       });
     });
 
@@ -527,6 +543,9 @@
 
             <div class="row">
               <div class="col-4">
+                <div id='logMessage-div' class="alert alert-success" style="display: none;">
+                  <strong id='logMessage' style="display: none"></strong>
+                </div>
               </div>
               <div class="col-8">
                 <button id="makeChanges" type="button" class="btn btn-primary">Apply Changes</button>
