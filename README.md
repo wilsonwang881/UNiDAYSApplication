@@ -22,6 +22,12 @@ Once the user finishes entering items, click on the button on the right of the i
 
 The prices can be changed and saved through the 'Pricing Rules' page. The user will be prompted when the price is updated successfully.
 
+The pricing policy can be changed also. Just follow the simple syntax:
+
+1. none -> for no discount
+2. x cost y -> if the buyer wants x same items, the buyer will pay for y pounds for x items
+3. x free y -> the buyer gets extra y items for free if the buyer buys x items
+3. x for y -> the buyer pays for the price of y items but will get x items
 
 ## Deployment:
 
