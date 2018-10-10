@@ -20,6 +20,8 @@ The user can change the number of each item either from the input field at the b
 
 Once the user finishes entering items, click on the button on the right of the input field to generate the delivery cost, the total price and a summary.
 
+The prices can be changed and saved through the 'Pricing Rules' page. The user will be prompted when the price is updated successfully.
+
 
 ## Deployment:
 
