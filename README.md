@@ -54,3 +54,5 @@ When validating the new pricing policy, the white space before and after the who
 Put the code into an online static website hosting service. Possible choices include but not limited to Amazon Web Services S3, GitHub repository web hosting (need to change the repository's settings) and Google Drive web hosting. Note some of the services are free of charge but some may incur additional charges.
 
 keep the file structure, i.e. put the files in the corresponding folders. If the file structure is changed, remember to change the head part of the index.html file in order to ensure correct reference.
+
+To host the application locally, simply open the index.html in any modern browser and you are good to go!
