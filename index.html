@@ -143,8 +143,6 @@
             discount: "3 for 2"}
       };
 
-      var defaultForReset = defaultPricingRule;
-
       $("#showCalculator").click(function () {
         $("#pricing-rules-div").attr("style", "display: none");
         $("#calculator-div").attr("style", "display: block");
@@ -326,9 +324,24 @@
       });
 
       $('#reset').click(function() {
-        console.log("clicked");
-        console.log(defaultForReset);
-        defaultPricingRule = defaultForReset;
+        defaultPricingRule = {
+          A: {price: 8,
+              discount: "none"},
+          B: {price: 12,
+              discount: "2 cost 20"},
+          C: {price: 4,
+              discount: "3 cost 10"},
+          D: {price: 7,
+              discount: "1 free 1"},
+          E: {price: 5,
+              discount: "3 for 2"}
+        };
+
+        $('#APrice').val(Number(defaultPricingRule['A']['price']).toFixed(2));
+        $('#BPrice').val(Number(defaultPricingRule['B']['price']).toFixed(2));
+        $('#CPrice').val(Number(defaultPricingRule['C']['price']).toFixed(2));
+        $('#DPrice').val(Number(defaultPricingRule['D']['price']).toFixed(2));
+        $('#EPrice').val(Number(defaultPricingRule['E']['price']).toFixed(2));
 
         $('#APrice').val(Number($('#APrice').val()).toFixed(2));
         $('#BPrice').val(Number($('#BPrice').val()).toFixed(2));
@@ -336,11 +349,11 @@
         $('#DPrice').val(Number($('#DPrice').val()).toFixed(2));
         $('#EPrice').val(Number($('#EPrice').val()).toFixed(2));
 
-        $('#APolicy').val(defaultForReset['A']['discount']);
-        $('#BPolicy').val(defaultForReset['B']['discount']);
-        $('#CPolicy').val(defaultForReset['C']['discount']);
-        $('#DPolicy').val(defaultForReset['D']['discount']);
-        $('#EPolicy').val(defaultForReset['E']['discount']);
+        $('#APolicy').val(defaultPricingRule['A']['discount']);
+        $('#BPolicy').val(defaultPricingRule['B']['discount']);
+        $('#CPolicy').val(defaultPricingRule['C']['discount']);
+        $('#DPolicy').val(defaultPricingRule['D']['discount']);
+        $('#EPolicy').val(defaultPricingRule['E']['discount']);
       });
     });
 
