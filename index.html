@@ -133,16 +133,14 @@
         $("#pricing-rules-div").attr("style", "display: none");
         $("#calculator-div").attr("style", "display: block");
         $('#logMessage-div').attr("style", "display: none");
-        $('#logMessage').html("");
-        $("#logMessage").attr("style", "display: none");
+        $('#errorMessage-div').attr("style", "display: none");
       });
 
       $("#showPricingRules").click(function (){
         $("#pricing-rules-div").attr("style", "display: block");
         $("#calculator-div").attr("style", "display: none");
         $('#logMessage-div').attr("style", "display: none");
-        $('#logMessage').html("");
-        $("#logMessage").attr("style", "display: none");
+        $('#errorgMessage-div').attr("style", "display: none");
 
         $('#APolicy').val(defaultPricingRule['A']['discount']);
         $('#BPolicy').val(defaultPricingRule['B']['discount']);
@@ -262,62 +260,88 @@
       });
 
       $('#makeChanges').click(function(){
-        defaultPricingRule['A']['price'] = $('#APrice').val();
-        defaultPricingRule['B']['price'] = $('#BPrice').val();
-        defaultPricingRule['C']['price'] = $('#CPrice').val();
-        defaultPricingRule['D']['price'] = $('#DPrice').val();
-        defaultPricingRule['E']['price'] = $('#EPrice').val();
+        var updatePolicy = true;
+        var sequence  =['A', 'B', 'C', 'D', 'E'];
+        var sequenceCounter = 0;
 
-        $('#APrice').val(Number($('#APrice').val()).toFixed(2));
-        $('#BPrice').val(Number($('#BPrice').val()).toFixed(2));
-        $('#CPrice').val(Number($('#CPrice').val()).toFixed(2));
-        $('#DPrice').val(Number($('#DPrice').val()).toFixed(2));
-        $('#EPrice').val(Number($('#EPrice').val()).toFixed(2));
+        while(sequenceCounter < 5 && updatePolicy == true){
+          var item = "#" + sequence[sequenceCounter] + "Policy";
+          try {
+            var rawPolicy =$(item).val().trim();
 
-        $('#APriceTag').html("£" + Number($('#APrice').val()).toFixed(2));
-        $('#BPriceTag').html("£" + Number($('#BPrice').val()).toFixed(2));
-        $('#CPriceTag').html("£" + Number($('#CPrice').val()).toFixed(2));
-        $('#DPriceTag').html("£" + Number($('#DPrice').val()).toFixed(2));
-        $('#EPriceTag').html("£" + Number($('#EPrice').val()).toFixed(2));
-
-        try {
-          var inA =$('#APolicy').val();
-
-          if(inA == "None" || )
-          var ruleA = inA.split(" ");
-
-
-        } catch (e) {
-
+            if(rawPolicy.toLowerCase() == "none"){
+              updatePolicy = true;
+            }
+            else{
+              var rule = rawPolicy.split(" ");
+              if(rule.length != 3){
+                updatePolicy = false;
+              }
+              else if(rule[1].toLowerCase() != "cost" &&
+                      rule[1].toLowerCase() != "free" &&
+                      rule[1].toLowerCase() != "for"){
+                updatePolicy = false;
+              }
+              else if(isNaN(rule[0]) || isNaN(rule[2])){
+                updatePolicy = false;
+              }
+            }
+          } catch (err) {
+            alert("Error in processing the new discount policy");
+          }
+          sequenceCounter += 1;
         }
 
-        defaultPricingRule['A']['discount'] = $('#APolicy').val();
-        defaultPricingRule['B']['discount'] = $('#BPolicy').val();
-        defaultPricingRule['C']['discount'] = $('#CPolicy').val();
-        defaultPricingRule['D']['discount'] = $('#DPolicy').val();
-        defaultPricingRule['E']['discount'] = $('#EPolicy').val();
+        if(updatePolicy){
+          defaultPricingRule['A']['price'] = $('#APrice').val();
+          defaultPricingRule['B']['price'] = $('#BPrice').val();
+          defaultPricingRule['C']['price'] = $('#CPrice').val();
+          defaultPricingRule['D']['price'] = $('#DPrice').val();
+          defaultPricingRule['E']['price'] = $('#EPrice').val();
 
-        $('.ACount').val('0');
-        $('.BCount').val('0');
-        $('.CCount').val('0');
-        $('.DCount').val('0');
-        $('.ECount').val('0');
+          $('#APrice').val(Number($('#APrice').val()).toFixed(2));
+          $('#BPrice').val(Number($('#BPrice').val()).toFixed(2));
+          $('#CPrice').val(Number($('#CPrice').val()).toFixed(2));
+          $('#DPrice').val(Number($('#DPrice').val()).toFixed(2));
+          $('#EPrice').val(Number($('#EPrice').val()).toFixed(2));
 
-        $('#cart').val('');
+          $('#APriceTag').html("£" + Number($('#APrice').val()).toFixed(2));
+          $('#BPriceTag').html("£" + Number($('#BPrice').val()).toFixed(2));
+          $('#CPriceTag').html("£" + Number($('#CPrice').val()).toFixed(2));
+          $('#DPriceTag').html("£" + Number($('#DPrice').val()).toFixed(2));
+          $('#EPriceTag').html("£" + Number($('#EPrice').val()).toFixed(2));
 
-        $("#belowSummary").attr("style", "display: none");
+          defaultPricingRule['A']['discount'] = $('#APolicy').val().trim().toLowerCase();
+          defaultPricingRule['B']['discount'] = $('#BPolicy').val().trim().toLowerCase();
+          defaultPricingRule['C']['discount'] = $('#CPolicy').val().trim().toLowerCase();
+          defaultPricingRule['D']['discount'] = $('#DPolicy').val().trim().toLowerCase();
+          defaultPricingRule['E']['discount'] = $('#EPolicy').val().trim().toLowerCase();
 
-        for(var key in defaultPricingRule){
-          var label = "#" + key;
-          $(label).attr("style", "display: none");
+          $('.ACount').val('0');
+          $('.BCount').val('0');
+          $('.CCount').val('0');
+          $('.DCount').val('0');
+          $('.ECount').val('0');
+
+          $('#cart').val('');
+
+          $("#belowSummary").attr("style", "display: none");
+
+          for(var key in defaultPricingRule){
+            var label = "#" + key;
+            $(label).attr("style", "display: none");
+          }
+
+          $("#deliveryDisplay").html("£0.00");
+          $("#totalDisplay").html("£0.00");
+
+          $('#errorMessage-div').attr("style", "display: none");
+          $('#logMessage-div').attr("style", "display: block");
         }
-
-        $("#deliveryDisplay").html("£0.00");
-        $("#totalDisplay").html("£0.00");
-
-        $('#logMessage').html("Updated successfully!");
-        $("#logMessage").attr("style", "display: block");
-        $('#logMessage-div').attr("style", "display: block");
+        else{
+          $('#logMessage-div').attr("style", "display: none");
+          $('#errorMessage-div').attr("style", "display: block");
+        }
       });
 
       $('#reset').click(function() {
@@ -351,6 +375,9 @@
         $('#CPolicy').val(defaultPricingRule['C']['discount']);
         $('#DPolicy').val(defaultPricingRule['D']['discount']);
         $('#EPolicy').val(defaultPricingRule['E']['discount']);
+
+        $('#logMessage-div').attr("style", "display: none");
+        $('#errorMessage-div').attr("style", "display: none");
       });
     });
 
@@ -518,7 +545,10 @@
             <div class="row">
               <div class="col-4">
                 <div id='logMessage-div' class="alert alert-success" style="display: none;">
-                  <strong id='logMessage' style="display: none"></strong>
+                  Updated successfully!
+                </div>
+                <div id='errorMessage-div' class="alert alert-danger" style="display: none;">
+                  Error updating pricing policy!
                 </div>
               </div>
               <div class="col-2">
