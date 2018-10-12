@@ -1,8 +1,24 @@
 # UNiDAYS Discount Calculator Application
 
-## Link to the program specification: 
+## Pricing Rules
 
-https://github.com/MyUNiDAYS/tech-placements-19-20
+(Quoted from https://github.com/MyUNiDAYS/tech-placements-19-20 above about the program specification)
+
+| Item | Price  | Discount |
+| ---- | ------ | -------- |
+| A    | £8.00  | None |
+| B    | £12.00 | 2 for £20.00 |
+| C    | £4.00  | 3 for £10.00 |
+| D    | £7.00  | Buy 1 get 1 free |
+| E    | £5.00  | 3 for the price of 2 |
+
+## Delivery Charges
+
+(Quoted from https://github.com/MyUNiDAYS/tech-placements-19-20 above about the program specification)
+
+Delivery charge £7.00
+
+Free delivery on orders over £50.00 (inclusive)
 
 ## Description:
 
