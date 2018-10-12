@@ -6,6 +6,8 @@ https://github.com/MyUNiDAYS/tech-placements-19-20
 
 ## Description:
 
+You can access the application at https://wilsonwang881.github.io/UNiDAYSApplication/
+
 The web interface includes two parts: one for selecting goods and adding them to the shopping cart, one for setting the prices and and discounts. Just click on the buttons on the left pane to switch. Note that once the prices, discounts or list of goods is changed, the shopping cart will be emptied and the user needs to re-select the goods.
 
 ## Implementation:
