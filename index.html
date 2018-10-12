@@ -280,6 +280,17 @@
         $('#DPriceTag').html("£" + Number($('#DPrice').val()).toFixed(2));
         $('#EPriceTag').html("£" + Number($('#EPrice').val()).toFixed(2));
 
+        try {
+          var inA =$('#APolicy').val();
+
+          if(inA == "None" || )
+          var ruleA = inA.split(" ");
+
+
+        } catch (e) {
+
+        }
+
         defaultPricingRule['A']['discount'] = $('#APolicy').val();
         defaultPricingRule['B']['discount'] = $('#BPolicy').val();
         defaultPricingRule['C']['discount'] = $('#CPolicy').val();
@@ -517,7 +528,23 @@
                 <button id="reset" type="button" class="btn btn-primary">Reset</button>
               </div>
             </div>
+            <div class="col-xs-12" style="height:3em;"></div>
 
+            <div class="row">
+              <h4>Syntax for Setting Discount</h4>
+            </div>
+            <div class="row">
+              <p>1. none -> no discount</p>
+            </div>
+            <div class="row">
+              <p>2. x cost y -> if the buyer wants x same items, the buyer will pay for y pounds for x items</p>
+            </div>
+            <div class="row">
+              <p>3. x free y -> the buyer gets extra y items for free if the buyer buys x items</p>
+            </div>
+            <div class="row">
+              <p>3. x for y -> the buyer pays for the price of y items but will get x items</p>
+            </div>
           </div>
         </div>
       </div>
