@@ -143,6 +143,8 @@
             discount: "3 for 2"}
       };
 
+      var defaultForReset = defaultPricingRule;
+
       $("#showCalculator").click(function () {
         $("#pricing-rules-div").attr("style", "display: none");
         $("#calculator-div").attr("style", "display: block");
@@ -322,6 +324,24 @@
         $("#logMessage").attr("style", "display: block");
         $('#logMessage-div').attr("style", "display: block");
       });
+
+      $('#reset').click(function() {
+        console.log("clicked");
+        console.log(defaultForReset);
+        defaultPricingRule = defaultForReset;
+
+        $('#APrice').val(Number($('#APrice').val()).toFixed(2));
+        $('#BPrice').val(Number($('#BPrice').val()).toFixed(2));
+        $('#CPrice').val(Number($('#CPrice').val()).toFixed(2));
+        $('#DPrice').val(Number($('#DPrice').val()).toFixed(2));
+        $('#EPrice').val(Number($('#EPrice').val()).toFixed(2));
+
+        $('#APolicy').val(defaultForReset['A']['discount']);
+        $('#BPolicy').val(defaultForReset['B']['discount']);
+        $('#CPolicy').val(defaultForReset['C']['discount']);
+        $('#DPolicy').val(defaultForReset['D']['discount']);
+        $('#EPolicy').val(defaultForReset['E']['discount']);
+      });
     });
 
     </script>
@@ -491,8 +511,11 @@
                   <strong id='logMessage' style="display: none"></strong>
                 </div>
               </div>
-              <div class="col-8">
+              <div class="col-2">
                 <button id="makeChanges" type="button" class="btn btn-primary">Apply Changes</button>
+              </div>
+              <div class="col-6">
+                <button id="reset" type="button" class="btn btn-primary">Reset</button>
               </div>
             </div>
 
