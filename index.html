@@ -53,20 +53,6 @@
         }
       }
 
-      removeFromBasket(item) {
-        try {
-          if(this._basket[item]>0){
-            this._basket[item] -= 1;
-          }
-          else{
-            this._basket[item] = 0;
-          }
-        }
-        catch(err) {
-          alert("Item does not exist");
-        }
-      }
-
       interpretPricingPolicy(item, amount) {
         var price = this._pricingRules[item]["price"];
 
