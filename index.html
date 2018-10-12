@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="css/bootstrap.min.css">
 
     <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS, then Vue.js -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/popper.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -56,40 +56,46 @@
       interpretPricingPolicy(item, amount) {
         var price = this._pricingRules[item]["price"];
 
+        // if no discount is applicable
+        // do price * number of items, then return the result
         if(this._pricingRules[item]["discount"]=="none"){
           return price*amount;
         }
+        // when a discount is applicable
         else{
+          // a discount policy consists of 3 parts
           var policy = this._pricingRules[item]["discount"].split(" ");
+
+          // also get the price of just 1 item
           var individualCost = this._pricingRules[item]["price"];
           var cost = 0;
 
+          // number of items in a discount bundle
+          var bundle = policy[0];
+
+          // 3 types of possible discounts
           switch (policy[1]) {
             case "cost":
-              var bundle = policy[0];
               var bundleCost = policy[2];
               var remainCount = amount % bundle;
               var bundleCount = (amount - remainCount) / bundle;
               cost = bundleCost * bundleCount + remainCount * individualCost;
               break;
             case "free":
-              var bundlePay = policy[0];
               var bundleFree = policy[2];
-              var remainCount = Number(amount) % (Number(bundlePay) + Number(bundleFree));
-              var bundleCount = (amount - remainCount) / (Number(bundlePay) + Number(bundleFree));
-              cost = bundleCount * bundlePay * individualCost + remainCount * individualCost;
+              var remainCount = Number(amount) % (Number(bundle) + Number(bundleFree));
+              var bundleCount = (amount - remainCount) / (Number(bundle) + Number(bundleFree));
+              cost = bundleCount * bundle * individualCost + remainCount * individualCost;
               break;
             case "for":
-              var bundleActual = policy[0];
               var bundlePay = policy[2];
-              var bundleRemain = amount % bundleActual;
-              var bundleCount = (amount - bundleRemain) / bundleActual;
+              var bundleRemain = amount % bundle;
+              var bundleCount = (amount - bundleRemain) / bundle;
               cost = bundleCount * bundlePay * individualCost + bundleRemain * individualCost;
               break;
             default:
               break;
           }
-
           return cost;
         }
       }
@@ -97,6 +103,9 @@
       calculateTotalPrice() {
         this._total = 0;
 
+        // use a key-value dictionary to store shopping cart information
+        // key is the name of the item
+        // value is the number of the items
         for(var key in this._basket) {
           if(this._basket[key]>0){
             this._total += this.interpretPricingPolicy(key, this._basket[key]);
@@ -129,19 +138,22 @@
             discount: "3 for 2"}
       };
 
+      // switch to the part where the user can select items and get prices
       $("#showCalculator").click(function () {
-        $("#pricing-rules-div").attr("style", "display: none");
         $("#calculator-div").attr("style", "display: block");
+        $("#pricing-rules-div").attr("style", "display: none");
         $('#logMessage-div').attr("style", "display: none");
         $('#errorMessage-div').attr("style", "display: none");
       });
 
+      // switch to the part where the user can change the pricing policies
       $("#showPricingRules").click(function (){
-        $("#pricing-rules-div").attr("style", "display: block");
         $("#calculator-div").attr("style", "display: none");
+        $("#pricing-rules-div").attr("style", "display: block");
         $('#logMessage-div').attr("style", "display: none");
         $('#errorgMessage-div').attr("style", "display: none");
 
+        // load the pricing policies
         $('#APolicy').val(defaultPricingRule['A']['discount']);
         $('#BPolicy').val(defaultPricingRule['B']['discount']);
         $('#CPolicy').val(defaultPricingRule['C']['discount']);
@@ -149,6 +161,8 @@
         $('#EPolicy').val(defaultPricingRule['E']['discount']);
       });
 
+      // click the "Get price" button to get the cost and the delivery fee
+      // the result will be displayed on the right side
       $("#updateInfo").click(function (){
         var cart = $("#cart").val().toUpperCase();
         let rules = new UnidaysDiscountChallenge(defaultPricingRule);
@@ -175,9 +189,12 @@
         }
 
         $("#deliveryDisplay").html("£" + rules.deliveryCharge());
-        $("#totalDisplay").html("£ " + rules.total());
+        $("#totalDisplay").html("£" + rules.total());
+        var plusDeliveryTotal = (Number(rules.deliveryCharge()) + Number(rules.total())).toFixed(2);
+        $("#plusDelivery").html("£" + plusDeliveryTotal);
       });
 
+      // change the content of the shopping cart by editing the number of items
       function changeFromDigit(event) {
         var item = event.data.item;
         var itemOption = "." + item + "Count";
@@ -192,7 +209,6 @@
         }
 
         if(amount > appearance){
-
           while(amount > appearance){
             summary += item;
             appearance += Number(1);
@@ -212,7 +228,6 @@
                 i += Number(1);
               }
             }
-
             appearance -= Number(1);
           }
         }
@@ -220,12 +235,16 @@
         $("#cart").val(summary);
       }
 
+      // bind the event listener to the input fields
+      // where the numbers of the items can be changed
       $(".ACount").bind('input', {item: "A"}, changeFromDigit);
       $(".BCount").bind('input', {item: "B"}, changeFromDigit);
       $(".CCount").bind('input', {item: "C"}, changeFromDigit);
       $(".DCount").bind('input', {item: "D"}, changeFromDigit);
       $(".ECount").bind('input', {item: "E"}, changeFromDigit);
 
+      // change the content of the shopping cart from the input fields below
+      // the input field refers to the one on the left of the "Get price" button
       $("#cart").bind('input', function(){
         var input = $("#cart").val().toUpperCase();
         var statics = {A:0, B:0, C:0, D:0, E:0};
@@ -252,6 +271,8 @@
           }
         }
 
+        // if the content of the input field on the left of the "Get price" button is changed
+        // the corresponding field that represents the numbers of the items will change as well
         $(".ACount").val(statics['A']);
         $(".BCount").val(statics['B']);
         $(".CCount").val(statics['C']);
@@ -259,19 +280,24 @@
         $(".ECount").val(statics['E']);
       });
 
+      // when the "Apply changes" button on the "Pricing Rules" page is clicked
       $('#makeChanges').click(function(){
         var updatePolicy = true;
         var sequence  =['A', 'B', 'C', 'D', 'E'];
         var sequenceCounter = 0;
 
+        // iterate through the fields that contain the discount policies
+        // and validate
         while(sequenceCounter < 5 && updatePolicy == true){
           var item = "#" + sequence[sequenceCounter] + "Policy";
           try {
             var rawPolicy =$(item).val().trim();
 
+            // if no discount
             if(rawPolicy.toLowerCase() == "none"){
               updatePolicy = true;
             }
+            // if discount applicable
             else{
               var rule = rawPolicy.split(" ");
               if(rule.length != 3){
@@ -292,6 +318,7 @@
           sequenceCounter += 1;
         }
 
+        // if the updated policies are validated
         if(updatePolicy){
           defaultPricingRule['A']['price'] = $('#APrice').val();
           defaultPricingRule['B']['price'] = $('#BPrice').val();
@@ -338,12 +365,14 @@
           $('#errorMessage-div').attr("style", "display: none");
           $('#logMessage-div').attr("style", "display: block");
         }
+        // if the validation failed
         else{
           $('#logMessage-div').attr("style", "display: none");
           $('#errorMessage-div').attr("style", "display: block");
         }
       });
 
+      // reset the prices and the discount policies
       $('#reset').click(function() {
         defaultPricingRule = {
           A: {price: 8,
@@ -439,8 +468,13 @@
                     <input id="cart" type="text" class="form-control" style="width: 100%;">
                   </div>
                   <div class="col">
-                    <button id="updateInfo" class="btn btn-default">Get price</button></div>
+                    <button id="updateInfo" class="btn btn-default">Get price</button>
                   </div>
+                </div>
+                <div class="col-xs-12" style="height:3em;"></div>
+                <div class="row">
+                  <p>Access the github repository <a href="https://github.com/wilsonwang881/UNiDAYSApplication"> here</a></p>
+                </div>
               </div>
               <div class="col-2">
                 <h4>Summary</h4>
@@ -453,10 +487,12 @@
                 <div id="E" style="display: none;"></div>
                 <div id="F" style="display: none;"></div>
                 <hr size="5">
+                <h5>Sub-total<h5>
+                <h6 id="totalDisplay">£0.00</h6>
                 <h5>Delivery</h5>
                 <h6 id="deliveryDisplay">£0.00</h6>
                 <h5>Total</h5>
-                <h6 id="totalDisplay">£0.00</h6>
+                <h6 id="plusDelivery">£0.00</h6>
               </div>
             </div>
           </div>
@@ -552,7 +588,7 @@
                 </div>
               </div>
               <div class="col-2">
-                <button id="makeChanges" type="button" class="btn btn-primary">Apply Changes</button>
+                <button id="makeChanges" type="button" class="btn btn-primary">Apply changes</button>
               </div>
               <div class="col-6">
                 <button id="reset" type="button" class="btn btn-primary">Reset</button>
@@ -575,6 +611,12 @@
             <div class="row">
               <p>3. x for y -> the buyer pays for the price of y items but will get x items</p>
             </div>
+
+            <div class="col-xs-12" style="height:3em;"></div>
+            <div class="row">
+              <p>Access the github repository <a href="https://github.com/wilsonwang881/UNiDAYSApplication"> here</a></p>
+            </div>
+
           </div>
         </div>
       </div>
