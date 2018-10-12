@@ -29,6 +29,10 @@ The pricing policy can be changed also. Just follow the simple syntax:
 3. x free y -> the buyer gets extra y items for free if the buyer buys x items
 3. x for y -> the buyer pays for the price of y items but will get x items
 
+When validating the new pricing policy, the white space before and after the whole text will be removed. Also, please leave one space between elements in the policy.
+
 ## Deployment:
 
 Put the code into an online static website hosting service. Possible choices include but not limited to Amazon Web Services S3, GitHub repository web hosting (need to change the repository's settings) and Google Drive web hosting. Note some of the services are free of charge but some may incur additional charges.
+
+keep the file structure, i.e. put the files in the corresponding folders. If the file structure is changed, remember to change the head part of the index.html file in order to ensure correct reference.
